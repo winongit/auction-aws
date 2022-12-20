@@ -29,9 +29,11 @@ export class AuthService {
       // if (parsedPayload.exp > Date.now() / 1000)
       //   // check if token is expired
       //   return parsedPayload;
-      const parsedPayload = jwt_decode(token) as any;
+      let parsedPayload = jwt_decode(token) as any;
       if (parsedPayload.exp > Date.now() / 1000)
         // check if token is expired
+        parsedPayload._id = parsedPayload.sub;
+        parsedPayload.imgUrl = parsedPayload.picture;
         return parsedPayload;
     }
     return null;

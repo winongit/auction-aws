@@ -121,7 +121,9 @@ export class SignupComponent implements OnInit {
             this.user.imgUrl = event.body.filename as string;
             this.userService.signup(this.user).subscribe(
               (res) => {
-                this.router.navigate(['user/signin']);
+                // Navigate to verify page with user name
+
+                this.router.navigate(['user/verify', this.user.name]);
               },
               (err) => {
                 console.log(err);

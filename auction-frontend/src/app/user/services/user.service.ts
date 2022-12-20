@@ -28,6 +28,10 @@ export class UserService {
     return this.http.get<any>(`${this.apiURL}/users/checkEmail`);
   }
 
+  verifyEmail(token: any): Observable<any> {
+    return this.http.post<any>(`${this.apiURL}/users/verifyEmail`, token);
+  }
+
   upload(file: File): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
 
