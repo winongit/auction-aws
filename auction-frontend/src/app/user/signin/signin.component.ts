@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../models/user';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -19,10 +19,35 @@ export class SigninComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    console.log('SigninComponent.ngOnInit()');
+
+    this.activatedRoute.queryParams.subscribe((params) => {
+      console.log(params);
+      console.log(params['code']);
+      if (params['code']) {
+        const ssoCode = { code: params['code'] };
+        this.userService.signInWithSSOCode(ssoCode).subscribe(
+          (res) => {
+            console.log('SSO Sign In Success', res);
+            console.log(res);
+            localStorage.setItem('token', res.token);
+            this.router.navigate(['/auction']);
+          },
+          (err) => {
+            console.log(err);
+            this._snackBar.open('Sing In Failed', err.error.message.error, {
+              duration: 1000,
+            });
+          }
+        );
+      }
+    });
+
     this.createForm();
   }
 
@@ -63,7 +88,7 @@ export class SigninComponent implements OnInit {
       },
       (err) => {
         console.log(err);
-        this._snackBar.open(err, '', {
+        this._snackBar.open('Invalid Credentials!', '', {
           duration: 1000,
         });
       }

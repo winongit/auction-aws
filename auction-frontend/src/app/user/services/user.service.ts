@@ -32,6 +32,10 @@ export class UserService {
     return this.http.post<any>(`${this.apiURL}/users/verifyEmail`, token);
   }
 
+  signInWithSSOCode(code: any): Observable<any> {
+    return this.http.post<any>(`${this.apiURL}/users/auth/signInWithSSO`, code);
+  }
+
   upload(file: File): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
 
