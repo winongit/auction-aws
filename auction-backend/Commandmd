@@ -1,0 +1,15 @@
+https://auctionwin.auth.us-east-1.amazoncognito.com/
+
+Hosted UI:
+https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-app-integration.html
+https://<your_domain>/login?response_type=code&client_id=<your_app_client_id>&redirect_uri=http://localhost:3000
+
+https://auctionwin.auth.us-east-1.amazoncognito.com/login?response_type=code&client_id=6gvuqdb6n1aovirquiv36qip6p&redirect_uri=http://localhost:4200
+
+https://auctionwin.auth.us-east-1.amazoncognito.com/oauth2/token
+
+2fe247f6-4b0b-4f8c-83b0-b1d311760e26
+
+
+After Sign Up, Need to verify email address
+

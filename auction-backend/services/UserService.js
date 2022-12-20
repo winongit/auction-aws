@@ -1,9 +1,28 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { signUpUser, verifyUser, signInUser } = require("./CognitoService");
 
 const registerUser = async (user) => {
+  console.log("registeruser");
   console.log(user);
+
+  let userAttr = [];
+  userAttr.push({
+    Name: "email",
+    Value: user.email,
+  });
+  userAttr.push({
+    Name: "name",
+    Value: user.name,
+  });
+  userAttr.push({
+    Name: "picture",
+    Value: user.imgUrl,
+  });
+
+  return signUpUser(user.name, user.password, user.email, userAttr);
+
   let newUser = new User(user);
 
   let foundUser = await User.findOne({
@@ -52,9 +71,28 @@ const signIn = async (user) => {
   }
 };
 
+const signInWithCognito = async (user) => {
+  try {
+    let userDetails = signInUser(user.email, user.password);
+    return userDetails;
+  } catch (err) {
+    throw err;
+  }
+};
+
 const checkEmail = async (email) => {
   let user = await User.findOne({ email: email });
   return user;
 };
 
-module.exports = { registerUser, signIn, checkEmail };
+const verify = async (username, code) => {
+  return verifyUser(username, code);
+};
+
+module.exports = {
+  registerUser,
+  signIn,
+  checkEmail,
+  verify,
+  signInWithCognito,
+};

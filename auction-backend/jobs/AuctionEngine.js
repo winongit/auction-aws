@@ -44,7 +44,7 @@ if (parentPort) {
 
   const auctions = await getAuctionFor(param);
 
-  await Promise.all(
+  await Promise.all(  
     auctions.map(async (auction) => {
       return new Promise(async (resolve, reject) => {
         try {

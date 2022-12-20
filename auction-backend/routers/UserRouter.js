@@ -6,6 +6,8 @@ const {
   login,
   checkEmail,
   uploadPhoto,
+  verifyUser,
+  logInWithCognito,
 } = require("../controllers/UserController");
 const multer = require("multer");
 const path = require("path");
@@ -51,8 +53,11 @@ const upload = multer({
 // const upload = multer({ storage: storage, fileFilter: fileFilterFunc });
 
 router.post("/auth/signUp", register);
-router.post("/auth/signIn", login);
+// router.post("/auth/signIn", login);
+router.post("/auth/signIn", logInWithCognito);
+router.post("/auth/signInWithCognito", logInWithCognito);
 router.get("/checkEmail", checkEmail);
 router.post("/upload", upload.single("picture"), uploadPhoto);
+router.post("/verifyEmail", verifyUser);
 
 module.exports = router;

@@ -2,6 +2,8 @@ var userService = require("../services/UserService");
 
 exports.register = async (req, res) => {
   try {
+    console.log("registeruser");
+
     let user = await userService.registerUser(req.body);
     return res.json(user);
   } catch (err) {
@@ -18,6 +20,22 @@ exports.login = async (req, res) => {
     res.json(user);
   } catch (error) {
     console.log("i am error");
+    console.log(error);
+    res.status(400).send({
+      message: error,
+    });
+  }
+};
+
+exports.logInWithCognito = async (req, res) => {
+  console.log("I am in login with cognito");
+  try {
+    const user = await userService.signInWithCognito(req.body);
+    console.log("IdToken ", user.AuthenticationResult.IdToken);
+    console.log("after get user");
+
+    res.json({ token: user.AuthenticationResult.IdToken });
+  } catch (error) {
     console.log(error);
     res.status(400).send({
       message: error,
@@ -45,5 +63,20 @@ module.exports.uploadPhoto = (req, res) => {
     res.status(200).json({ filename: fileurl });
   } catch (err) {
     console.log(err);
+  }
+};
+
+exports.verifyUser = async (req, res) => {
+  try {
+    let { username, code } = req.body;
+    console.log(username);
+    console.log(code);
+    let user = await userService.verify(username, code);
+    console.log(user);
+    return res.json(user);
+  } catch (err) {
+    return {
+      message: err,
+    };
   }
 };

@@ -8,6 +8,9 @@ const Cabin = require("cabin");
 const Bree = require("bree");
 
 const { checkToken } = require("./middlewares/checkToken");
+const { verifyCognitoToken, setup } = require("./middlewares/AuthMiddleware");
+const { ApplicationCostProfiler } = require("aws-sdk");
+setup();
 
 const app = express();
 app.use(morgan("dev"));
@@ -32,10 +35,12 @@ app.use("/pictures", express.static(__dirname + "/assets/pics"));
 app.use("/users", require("./routers/UserRouter"));
 
 // auction
-app.use("/auctions", checkToken, require("./routers/AuctionRouter"));
+// app.use("/auctions", checkToken, require("./routers/AuctionRouter"));
+app.use("/auctions", verifyCognitoToken, require("./routers/AuctionRouter"));
 
 // bidding
-app.use("/bid", checkToken, require("./routers/BidRouter"));
+// app.use("/bid", checkToken, require("./routers/BidRouter"));
+app.use("/bid", verifyCognitoToken, require("./routers/BidRouter"));
 
 // Url not match
 app.use((req, res) => {
