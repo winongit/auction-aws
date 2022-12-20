@@ -1,5 +1,9 @@
 const AWS = require("aws-sdk");
+const { default: axios } = require("axios");
 const crypto = require("crypto");
+const { errorMonitor } = require("events");
+const FormData = require("form-data");
+const querystring = require("querystring");
 
 require("dotenv").config();
 const secretHash = process.env.AWS_COGNITO_CLIENT_SECRET;
@@ -71,6 +75,41 @@ async function signInUser(username, password) {
   }
 }
 
+//Create method to get token with single sign on with x-www-form-urlencoded
+async function getTokenWithSignleSignOn(code) {
+  console.log("code", code);
+
+  const data = querystring.stringify({
+    grant_type: "authorization_code",
+    redirect_uri: process.env.AWS_COGNITO_REDIRECT_URI,
+    code: code,
+    scope: "openid+profile",
+  });
+  console.log("data", data);
+
+  try {
+    const tokenData = await axios.post(process.env.AWS_COGNITO_SSO_URL, data, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json",
+        Authorization:
+          "Basic " +
+          btoa(
+            process.env.AWS_COGNITO_CLIENT_ID +
+              ":" +
+              process.env.AWS_COGNITO_CLIENT_SECRET
+          ),
+      },
+    });
+
+    return tokenData.data;
+  } catch (error) {
+    console.log("this is error", error);
+
+    throw error.response.data;
+  }
+}
+
 function getSecretHash(username) {
   return crypto
     .createHmac("SHA256", secretHash)
@@ -82,4 +121,5 @@ module.exports = {
   signUpUser,
   verifyUser,
   signInUser,
+  getTokenWithSignleSignOn,
 };

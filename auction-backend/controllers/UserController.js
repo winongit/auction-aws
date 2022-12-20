@@ -75,8 +75,25 @@ exports.verifyUser = async (req, res) => {
     console.log(user);
     return res.json(user);
   } catch (err) {
-    return {
+    console.log(err);
+    return res.status(400).send({
       message: err,
-    };
+    });
+  }
+};
+
+exports.getSSOUserToken = async (req, res) => {
+  try {
+    let { code } = req.body;
+    console.log(code);
+    let user = await userService.getSSOUserToken(code);
+    console.log(user);
+
+    res.status(200).json({ token: user.id_token });
+  } catch (err) {
+    console.log(err);
+    res.status(400).send({
+      message: err,
+    });
   }
 };

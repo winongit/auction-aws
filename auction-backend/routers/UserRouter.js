@@ -8,6 +8,7 @@ const {
   uploadPhoto,
   verifyUser,
   logInWithCognito,
+  getSSOUserToken,
 } = require("../controllers/UserController");
 const multer = require("multer");
 const path = require("path");
@@ -59,5 +60,6 @@ router.post("/auth/signInWithCognito", logInWithCognito);
 router.get("/checkEmail", checkEmail);
 router.post("/upload", upload.single("picture"), uploadPhoto);
 router.post("/verifyEmail", verifyUser);
+router.post("/auth/signInWithSSO", getSSOUserToken);
 
 module.exports = router;

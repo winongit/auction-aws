@@ -1,7 +1,12 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { signUpUser, verifyUser, signInUser } = require("./CognitoService");
+const {
+  signUpUser,
+  verifyUser,
+  signInUser,
+  getTokenWithSignleSignOn,
+} = require("./CognitoService");
 
 const registerUser = async (user) => {
   console.log("registeruser");
@@ -89,10 +94,17 @@ const verify = async (username, code) => {
   return verifyUser(username, code);
 };
 
+const getSSOUserToken = async (code) => {
+  let user = await getTokenWithSignleSignOn(code);
+  console.log(user);
+  return user;
+};
+
 module.exports = {
   registerUser,
   signIn,
   checkEmail,
   verify,
   signInWithCognito,
+  getSSOUserToken,
 };
