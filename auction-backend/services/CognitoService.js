@@ -27,8 +27,7 @@ async function signUpUser(username, password, email, userAttributes) {
 
   try {
     const data = await cognitoIdentiy.signUp(params).promise();
-    console.log(data);
-
+  
     return true;
   } catch (error) {
     console.log(error);
@@ -77,8 +76,6 @@ async function signInUser(username, password) {
 
 //Create method to get token with single sign on with x-www-form-urlencoded
 async function getTokenWithSignleSignOn(code) {
-  console.log("code", code);
-
   const data = querystring.stringify({
     grant_type: "authorization_code",
     redirect_uri: process.env.AWS_COGNITO_REDIRECT_URI,
@@ -105,12 +102,11 @@ async function getTokenWithSignleSignOn(code) {
     return tokenData.data;
   } catch (error) {
     console.log("this is error", error);
-
     throw error.response.data;
   }
 }
 
-function getSecretHash(username) {
+function  getSecretHash(username) {
   return crypto
     .createHmac("SHA256", secretHash)
     .update(username + process.env.AWS_COGNITO_CLIENT_ID)

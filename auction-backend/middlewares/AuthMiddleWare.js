@@ -40,8 +40,6 @@ const verifyCognitoToken = (req, res, next) => {
     res.status(401).send({ auth: false, message: "No token provided." });
   }
 
-  console.log("token: ", token);
-
   const decodedJwt = jwt.decode(token, { complete: true });
   console.log(decodedJwt);
 
@@ -50,12 +48,7 @@ const verifyCognitoToken = (req, res, next) => {
   }
 
   const kid = decodedJwt.header.kid;
-  console.log("kid: ", kid);
-
-  console.log("pems: ", pems);
-
   const pem = pems.get(kid);
-  console.log("pem: ", pem);
 
   if (!pem) {
     next({ auth: false, message: "Invalid token" });
